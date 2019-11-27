@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Admin.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Musical_WebStore_BlazorApp.Server.Data.Models;
 using Musical_WebStore_BlazorApp.Shared;
@@ -18,6 +19,9 @@ namespace Musical_WebStore_BlazorApp.Server.Data
         public DbSet<Instrument> Instruments { get; set; }
         public DbSet<Comment> Comments {get;set;}
         public DbSet<Star> Stars {get;set;}
+        public DbSet<Location> Locations {get;set;} 
+        public DbSet<Device> Devices {get;set;}
+        public DbSet<DeviceType> DeviceTypes {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Guitar>()
@@ -156,6 +160,39 @@ namespace Musical_WebStore_BlazorApp.Server.Data
             }
         }
 
+        private static IEnumerable<Location> GetLocations()
+        {
+            IEnumerable<Location> list = new List<Location>()
+            {
+                new Location() {Id = -1, Name = "First Data Store", Address = "Bakulina 35"},
+                new Location() {Id = -2, Name = "Second Data Store", Address = "Bakulina 13"},
+                new Location() {Id = -3, Name = "Third Data Store", Address = "Toloka 29"},
+
+            };
+            return list;
+        }
+
+
+        private static IEnumerable<DeviceType> GetTypes()
+        {
+            List<DeviceType> types = new List<DeviceType>()
+            {
+                new DeviceType(){Id = -1, Name = "Temperature"},
+                new DeviceType(){Id = -2, Name = "Pressure"},
+                new DeviceType(){Id = -3, Name = "Шllumination"}
+            };
+            return types;
+        }
+
+        private static IEnumerable<Device> GetDevices()
+        {
+            List<Device> devs = new List<Device>()
+            {
+                new Device() {Id = -1, Name = "1-st Beer Block"},
+                new Device() {Id = -2, Name = "2-st Beer Block"}
+            };
+            return devs;
+        }
         private static IEnumerable<Pedal> GetPedals(int length, int offset)
         {
             string[] guitarTitles = GetName("pedal");
@@ -183,6 +220,42 @@ namespace Musical_WebStore_BlazorApp.Server.Data
             var pedals = GetPedals(@base, @base * 0).ToArray();
             var amps = GetAmplifiers(@base, @base * 1).ToArray();
             var guitars = GetGuitars(@base, @base * 2).ToArray();
+            var locations = GetLocations().ToArray();
+            var devices = GetDevices().ToArray();
+
+
+            blder.Entity<DeviceType>()
+                .HasData(
+                    new DeviceType()
+                    {   Id = -1,
+                        Name = "Temperature"
+                    },
+                    new DeviceType()
+                    {   Id = -2,
+                        Name = "Pressure"
+                    }
+                );
+
+            blder.Entity<Device>()
+                .HasData(
+                    new Device()
+                    {
+                        Id = -1,
+                        Name = "1-st Beer Module",
+                        TypeId = -1,
+                        LocationId = -1
+                    },
+                    new Device()
+                    {
+                        Id = -2,
+                        Name = "2-nd Beer Module",
+                        TypeId = -2,
+                        LocationId = -1
+                    }
+                );
+
+            blder.Entity<Location>()
+                .HasData(locations);
 
             blder.Entity<Pedal>()
                 .HasData(pedals);

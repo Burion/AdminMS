@@ -1,0 +1,97 @@
+@page "/location/{Index}"
+@page "/location"
+@using Musical_WebStore_BlazorApp.Shared
+@using Admin.ViewModels
+@using Microsoft.AspNetCore.Blazor
+@using System.IO;
+@inject HttpClient client
+
+<div class="row">
+                    
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Map of your locations</h6>
+            </div>
+            <div class="card-body">
+                <div id="map">
+                    <img src="images/beer.jpg" width="100%" height="100%">
+                </div>
+                <h1></h1>
+            </div>                    
+        </div>
+    </div>
+
+<div class="col-xl-8 col-lg-7">
+    <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Map of your locations</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-boarded table-hover"  width="100%" cellspacing="0">
+                
+                        @if(devices == null)
+                        {
+                            <text>Loading...</text>
+                        }
+                        else
+                        {
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Model
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>   
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach(var dev in devices)
+                            {
+                            <tr>
+                                <th>
+                                    @dev.Type
+                                </th>
+                                <th>
+                                    @dev.Name
+                                </th>
+                                <th>
+                                    <text>here's model</text>
+                                </th>
+                                <th>
+                                    <text>here's status</text>
+                                </th>   
+                            </tr>
+                            }
+                            </tbody>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+
+{   [Parameter]
+    public string Index {get;set;}
+    
+    List<DeviceViewModel> devices = null;
+
+        protected override async Task OnInitializedAsync()
+        {
+            int ind = int.Parse(Index);
+            devices = await client.GetJsonAsync<List<DeviceViewModel>>("api/locations/getdevices");
+
+        }
+}

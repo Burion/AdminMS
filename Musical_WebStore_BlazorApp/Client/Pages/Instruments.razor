@@ -1,11 +1,101 @@
 ﻿@page "/list"
 @page "/list/{Type}"
 @using Musical_WebStore_BlazorApp.Shared
+@using Admin.ViewModels
 @using Microsoft.AspNetCore.Blazor
 @using System.IO;
 @inject HttpClient client
+<head>
+
+</head>
 <h3 class="inst-title">Instruments</h3>
 
+<div class="row">
+                        
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Map of your locations</h6>
+            </div>
+            <div class="card-body">
+                <div id="map">
+                    <img src="images/maps.png" width="100%" height="100%">
+                </div>
+            </div>                    
+        </div>
+    </div>
+
+<div class="col-xl-4 col-lg-5">
+    <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Map of your locations</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-boarded table-hover"  width="100%" cellspacing="0">
+                
+                        @if(locations == null)
+                        {
+                            <text>Loading...</text>
+                        }
+                        else
+                        {
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Adress
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>   
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach(var loc in locations)
+                            {
+                                <tr>
+                                    <th>
+                                        @loc.Name
+                                    </th>
+                                    <th>
+                                        @loc.Address
+                                    </th>
+                                    @{string statusClass = "";}
+                                    @switch(@loc.Status)
+                                    {
+                                        case (int)Statuses.Normal: 
+                                        statusClass = "nrm";
+                                        break;
+                                        case (int)Statuses.Warning: 
+                                        statusClass = "awr";
+                                        break;
+                                        case (int)Statuses.Danger:
+                                        statusClass = "crtcl"; 
+                                        break;
+                                    }
+                                    <th class="@statusClass">
+                                        <div>
+                                            <i class="fas fa-tint text-white"></i>
+                                            <i class="fas fa-tint text-white"></i>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-thermometer-three-quarters text-white"></i>
+                                        </div>
+                                    </th>
+                                </tr>
+                            }
+                        </tbody>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @if (instruments == null)
 {
     <p><em>Loading instruments...</em></p>
@@ -53,7 +143,7 @@ else
 
 @code {
     List<Instrument> all_instruments = null;
-
+    List<LocationViewModel> locations = null;
     List<Instrument> instruments = null;
     [Parameter]
     public string Type { get; set; }
@@ -78,6 +168,7 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
+        locations = await client.GetJsonAsync<List<LocationViewModel>>("api/locations");
         instruments = await client.GetJsonAsync<List<Instrument>>("api/Instruments");
         all_instruments = instruments;
     }
