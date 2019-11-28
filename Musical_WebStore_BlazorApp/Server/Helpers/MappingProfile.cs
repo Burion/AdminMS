@@ -10,7 +10,8 @@ public class MappingProfile : Profile {
         CreateMap<User, UserLimited>();
         CreateMap<Comment, CommentLimited>();
         CreateMap<Location, LocationViewModel>();
-        CreateMap<Device, DeviceViewModel>();
+        CreateMap<Device, ModuleViewModel>();
+        CreateMap<Metering, MeteringModel>();
         
     }
 }

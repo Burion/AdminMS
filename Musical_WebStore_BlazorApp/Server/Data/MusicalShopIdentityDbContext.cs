@@ -22,6 +22,8 @@ namespace Musical_WebStore_BlazorApp.Server.Data
         public DbSet<Location> Locations {get;set;} 
         public DbSet<Device> Devices {get;set;}
         public DbSet<DeviceType> DeviceTypes {get;set;}
+        public DbSet<Module> Modules {get;set;}
+        public DbSet<Metering> Meterings {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Guitar>()
@@ -250,10 +252,43 @@ namespace Musical_WebStore_BlazorApp.Server.Data
                         Id = -2,
                         Name = "2-nd Beer Module",
                         TypeId = -2,
-                        LocationId = -1
+                        LocationId = -1,
+                        ModuleId = -1
                     }
                 );
-
+            blder.Entity<Metering>()
+                .HasData(
+                    new Metering()
+                    {
+                        Date = DateTime.Today,
+                        Id = -1,
+                        Value = 15.5f,
+                        DeviceId = -1
+                    },
+                    new Metering()
+                    {
+                        Date = DateTime.Today,
+                        Id = -2,
+                        Value = 16.3f,
+                        DeviceId = -1
+                    },
+                    new Metering()
+                    {
+                        Date = DateTime.Today,
+                        Id = -3,
+                        Value = 13.8f,
+                        DeviceId = -1
+                    }
+                );
+            blder.Entity<Module>()
+                .HasData(
+                    new Module()
+                    {
+                        Id = -1,
+                        Location = "Right wing of office center",
+                        Name = "Cooling block"
+                    }
+                );
             blder.Entity<Location>()
                 .HasData(locations);
 

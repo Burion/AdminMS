@@ -31,7 +31,7 @@
                 <div class="table-responsive">
                     <table class="table table-boarded table-hover"  width="100%" cellspacing="0">
                 
-                        @if(devices == null)
+                        @if(modules == null)
                         {
                             <text>Loading...</text>
                         }
@@ -54,7 +54,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach(var dev in devices)
+                            @foreach(var dev in modules)
                             {
                             <tr>
                                 <th>
@@ -86,12 +86,12 @@
 {   [Parameter]
     public string Index {get;set;}
     
-    List<DeviceViewModel> devices = null;
+    List<ModuleViewModel> modules = null;
 
         protected override async Task OnInitializedAsync()
         {
             int ind = int.Parse(Index);
-            devices = await client.GetJsonAsync<List<DeviceViewModel>>("api/locations/getdevices");
+            modules = await client.GetJsonAsync<List<ModuleViewModel>>("api/locations/getmodules");
 
         }
 }

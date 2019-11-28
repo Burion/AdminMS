@@ -14,6 +14,8 @@ namespace Admin.Models
         public float BoundAllowUpper {get;set;}
         public float BoundAllowLower {get;set;}
         public float MinAllow {get;set;}
-        public virtual IEnumerable<Metering> Meterings {get;set;}
+        public int ModuleId {get;set;}
+        public virtual Module Module {get;set;}
+        
     }
 }
