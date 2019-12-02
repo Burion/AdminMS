@@ -9,6 +9,7 @@ using Musical_WebStore_BlazorApp.Server.Data;
 using Musical_WebStore_BlazorApp.Server.Data.Models;
 using Musical_WebStore_BlazorApp.Server.Helpers;
 using Musical_WebStore_BlazorApp.Server.Services;
+using Newtonsoft.Json;
 
 namespace Musical_WebStore_BlazorApp.Server
 {
@@ -37,7 +38,11 @@ namespace Musical_WebStore_BlazorApp.Server
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddMvc().AddNewtonsoftJson();
+            services.AddMvc().AddNewtonsoftJson(
+                options => {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                }
+            );
             services.AddTransient<IEmailSender, MockeeMockersEmailSender>();
             services.AddTransient<IFileSavingService, FileSavingService>();
         }

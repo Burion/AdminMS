@@ -11,7 +11,7 @@
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Map of your locations</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Cooling block #1</h6>
             </div>
             <div class="card-body">
                 <div id="map">
@@ -19,77 +19,90 @@
                 </div>
             </div>                    
         </div>
-    </div>
 
-<div class="col-xl-8 col-lg-7">
-    <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Map of your locations</h6>
-            </div>
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
-                </div>
-                <div class="card-body">
-                  <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
-                  </div>
-                  <hr>
-                </div>
-              </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-boarded table-hover"  width="100%" cellspacing="0">
-                
-                        @if(devices == null)
+        <div class="card shadow mb-4">
+            <div class="table-responsive">
+                <table class="table table-boarded table-hover"  width="100%" cellspacing="0">
+                    <thead>
+                        <td>
+                            Type
+                        </td>
+                        <td>
+                            Sensor Model
+                        </td>
+                        <td>
+                        </td>
+                    </thead>
+                    <tbody>
+                        @if(sensors == null)
                         {
                             <text>Loading...</text>
                         }
                         else
                         {
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Type
-                                    </th>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Model
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>   
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach(var dev in devices)
+                            @foreach(var sen in sensors)
                             {
-                            <tr>
-                                <th>
-                                    @dev.Type
-                                </th>
-                                <th>
-                                    @dev.Name
-                                </th>
-                                <th>
-                                    <text>here's model</text>
-                                </th>
-                                <th>
-                                    <text>here's status</text>
-                                </th>   
-                            </tr>
-                            }
-                            </tbody>
-                        }
 
-                    </table>
+                                <tr @onclick="@(() => CreateChart(@sen.Id))">
+                                    <td>
+                                        @sen.Id
+                                    </td>
+                                    <td>
+                                        Hibson 1.0T
+                                    </td>
+                                    <td>
+                                        <button>
+                                            More
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+    </div>
+
+
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3" style="display: inline;">
+                <h6 class="m-0 font-weight-bold text-primary" style="display: inline-block;">Temperature</h6>
+                <input type="date">
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Temperature</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Temperature</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="radarChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
+    
+
+
 
 @code
 
@@ -98,19 +111,28 @@
     
     List<ModuleViewModel> devices = null;
     List<MeteringModel> meterings = null;
+    List<DeviceViewModel> sensors = null;
         protected override async Task OnInitializedAsync()
         {
 
             int ind = int.Parse(Index);
-            devices = await client.GetJsonAsync<List<ModuleViewModel>>("api/locations/getmodules");
             meterings = await client.GetJsonAsync<List<MeteringModel>>("api/locations/getmeterings");
+            sensors = await client.GetJsonAsync<List<DeviceViewModel>>("api/locations/getdevices");
             CreateChart();
 
         }
+
         protected void CreateChart()
         {
             var values = meterings.Select(m => m.Value).ToArray();
             var dates = meterings.Select(m => m.Date.ToString()).ToArray();
+            jsRuntime.InvokeVoidAsync("CreateChart", values, dates);
+        }
+
+        protected void CreateChart(int id)
+        {
+            var values = meterings.Where(met => met.DeviceId == id).Select(m => m.Value).ToArray();
+            var dates = meterings.Where(met => met.DeviceId == id).Select(m => m.Date.ToString()).ToArray();
             jsRuntime.InvokeVoidAsync("CreateChart", values, dates);
         }
         

@@ -40,19 +40,25 @@ namespace Musical_WebStore_BlazorApp.Server.Controllers
             return locationsModels;
         }
 
+        public async Task<Device[]> GetSensorsAsync() => await ctx.Devices.ToArrayAsync();
+        [Route("getdevices")]
+        public async Task<IEnumerable<DeviceViewModel>> GetDevices()
+        {
+            var devices = await GetSensorsAsync();
+            var deviceViewModels = devices.Select(dev => new DeviceViewModel(){ Id = dev.Id, Name = dev.Name});
+            return deviceViewModels;
+        }
         public async Task<Module[]> GetDevicesAsync() => await ctx.Modules.ToArrayAsync();
         [Route("getmodules")]
-        public async Task<IEnumerable<ModuleViewModel>> GetDevices()
+        public async Task<IEnumerable<ModuleViewModel>> GetSensors()
         {
             var devices = await GetDevicesAsync();
             var deviceViewModels = devices.Select(dev => new ModuleViewModel(){ Name = dev.Name, Location = dev.Location});
             return deviceViewModels;
         }
 
-        
-        public async Task<Metering[]> GetMeteringsAsync() => await ctx.Meterings.ToArrayAsync();
-        
         [Route("getmeterings")]
+        public async Task<Metering[]> GetMeteringsAsync() => await ctx.Meterings.ToArrayAsync();
         public async Task<IEnumerable<MeteringModel>> GetMeterings()
         {
             var meterings = await GetMeteringsAsync();

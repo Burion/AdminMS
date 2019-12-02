@@ -12,6 +12,7 @@ public class MappingProfile : Profile {
         CreateMap<Location, LocationViewModel>();
         CreateMap<Device, ModuleViewModel>();
         CreateMap<Metering, MeteringModel>();
+        CreateMap<Module, ModuleViewModel>();
         
     }
 }

@@ -256,30 +256,29 @@ namespace Musical_WebStore_BlazorApp.Server.Data
                         ModuleId = -1
                     }
                 );
+                Random random = new Random();
+                List<Metering> meterings = new List<Metering>();
+                for(int x = 1; x < 50; x++)
+                {
+                    int day = random.Next(5, 10);
+                    int hour = random.Next(5, 10);
+                    int minute = random.Next(5, 10);
+                    int second = random.Next(5, 10);
+                    int deviceId = -((x % 2) + 1);
+                    Metering metering = new Metering()
+                    {
+                        Date = new DateTime(2019, 12, day, hour, minute, second),
+                        DeviceId = deviceId,
+                        Id = -x,
+                        Value = (float)random.Next(50, 100)
+                    };
+                    meterings.Add(metering);
+                }
             blder.Entity<Metering>()
                 .HasData(
-                    new Metering()
-                    {
-                        Date = DateTime.Today,
-                        Id = -1,
-                        Value = 15.5f,
-                        DeviceId = -1
-                    },
-                    new Metering()
-                    {
-                        Date = DateTime.Today,
-                        Id = -2,
-                        Value = 16.3f,
-                        DeviceId = -1
-                    },
-                    new Metering()
-                    {
-                        Date = DateTime.Today,
-                        Id = -3,
-                        Value = 13.8f,
-                        DeviceId = -1
-                    }
+                    meterings
                 );
+                
             blder.Entity<Module>()
                 .HasData(
                     new Module()

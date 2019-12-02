@@ -15,7 +15,9 @@ app {
     display: flex;
     align-items: center;
 }
-
+.chart-area {
+  height: 50%;
+}
 .main {
     flex: 1;
 }
