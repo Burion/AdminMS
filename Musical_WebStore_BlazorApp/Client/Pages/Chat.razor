@@ -1,0 +1,89 @@
+@page "/chats/{Index}"
+<div class="row">   
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Your chats</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-boarded table-hover" >
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">               
+                                </th>    
+                                <th>
+                                <p class="chat-prev-name">
+                                    Willis
+                                </p>
+                                <p class="chat-prev-mes">
+                                    Here's what I want to say...
+                                </p>
+                                    
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">               
+                                </th>    
+                                <th>
+                                <p class="chat-prev-name">
+                                    Willis
+                                </p>
+                                <p class="chat-prev-mes">
+                                    Here's what I want to say...
+                                </p>
+                                    
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Linda James</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="messages">
+                                <ul>
+                                    <li class="notification">
+                                        <p>
+                                            Conversation was started
+                                        </p>
+                                    </li>
+                                    <li class="sent">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">               
+                                        <p>Hello</p>
+                                    </li>
+                                    <li class="replies">
+                                            <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">               
+                                            <p>Hello</p>
+                                    </li>
+                                    
+                                </ul>
+                                    <form>
+                                        <input type="text" class="form-control bg-gray border-1" placeholder="Write your message..." aria-label="Search" aria-describedby="basic-addon2">
+                                        <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                                        <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                    </form>
+                        </div>
+                                </div>
+                                
+                        </div>
+                        
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public string Index {get;set;}
+
+
+}
