@@ -13,6 +13,7 @@ public class MappingProfile : Profile {
         CreateMap<Device, ModuleViewModel>();
         CreateMap<Metering, MeteringModel>();
         CreateMap<Module, ModuleViewModel>();
+        CreateMap<Chat, ChatModel>();
         
     }
 }

@@ -24,8 +24,12 @@ namespace Musical_WebStore_BlazorApp.Server.Data
         public DbSet<DeviceType> DeviceTypes {get;set;}
         public DbSet<Module> Modules {get;set;}
         public DbSet<Metering> Meterings {get;set;}
+        public DbSet<Chat> Chats {get;set;}
+        public DbSet<ChatUser> ChatUsers {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ChatUser>().HasKey(cu => new {cu.ChatId, cu.UserId});
+            builder.Entity<ChatUser>().HasOne(cu => cu.Chat).WithMany(u => u.ChatUsers).HasForeignKey(cu => cu.ChatId);
             builder.Entity<Guitar>()
                 .HasBaseType<Instrument>();
 
@@ -225,6 +229,40 @@ namespace Musical_WebStore_BlazorApp.Server.Data
             var locations = GetLocations().ToArray();
             var devices = GetDevices().ToArray();
 
+            blder.Entity<User>()
+                .HasData(
+                    new User
+                    {
+                        Id = "qwjehfpkjnvdpjwn3pro",
+                        Email = "vladislavburyak00@gmail.com",
+                        UserName = "Fucker"
+                    }
+                );
+            blder.Entity<Chat>().HasData
+            (
+                new Chat()
+                {
+                    Id = -1, 
+                    Name = "Fucker's chat",
+                    Description = "Motherfucker's chat"                    
+                },
+                new Chat()
+                {
+                    Id = -2, 
+                    Name = "Second Fucker's chat",
+                    Description = "Second Motherfucker's chat"                    
+                }
+            );
+
+
+            blder.Entity<ChatUser>().HasData
+            (
+                new ChatUser()
+                {
+                    ChatId = -1,
+                    UserId = "qwjehfpkjnvdpjwn3pro"
+                }    
+            );
 
             blder.Entity<DeviceType>()
                 .HasData(
