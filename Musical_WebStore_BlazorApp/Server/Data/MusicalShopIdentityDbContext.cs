@@ -26,6 +26,7 @@ namespace Musical_WebStore_BlazorApp.Server.Data
         public DbSet<Metering> Meterings {get;set;}
         public DbSet<Chat> Chats {get;set;}
         public DbSet<ChatUser> ChatUsers {get;set;}
+        public DbSet<Message> Messages {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ChatUser>().HasKey(cu => new {cu.ChatId, cu.UserId});
@@ -251,6 +252,41 @@ namespace Musical_WebStore_BlazorApp.Server.Data
                     Id = -2, 
                     Name = "Second Fucker's chat",
                     Description = "Second Motherfucker's chat"                    
+                }
+            );
+
+            blder.Entity<Message>().HasData(
+                new Message() 
+                {
+                    Id = -1, 
+                    UserId = "qwjehfpkjnvdpjwn3pro",
+                    ChatId = -1,
+                    Date = DateTime.Now,
+                    Text = "Hello, friend!"
+                },
+                new Message() 
+                {
+                    Id = -2, 
+                    UserId = "qwjehfpkjnvdpjwn3pro",
+                    ChatId = -1,
+                    Date = DateTime.Now,
+                    Text = "I just wanted to ask you something."
+                },
+                new Message() 
+                {
+                    Id = -3, 
+                    UserId = "qwjehfpkjnvdpjwn3pro",
+                    ChatId = -2,
+                    Date = DateTime.Now,
+                    Text = "Тошо ты пидор, епта."
+                },
+                new Message() 
+                {
+                    Id = -4, 
+                    UserId = "qwjehfpkjnvdpjwn3pro",
+                    ChatId = -2,
+                    Date = DateTime.Now,
+                    Text = "А может это ты пидор?"
                 }
             );
 

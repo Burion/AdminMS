@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Admin.Models;
 using AutoMapper;
 using Admin.ViewModels;
+using Admin.ResultModels;
 
 namespace Musical_WebStore_BlazorApp.Server.Controllers
 {
@@ -44,6 +45,29 @@ namespace Musical_WebStore_BlazorApp.Server.Controllers
             var chats = await GetChatsAsync();
             var chatsmodels = chats.Select(s => new ChatModel(){ Name = s.Name, Description = s.Description, ChatUsersNames = s.ChatUsers.Select(cu => cu.User.Email).ToList()}).ToArray();
             return chatsmodels;
+        }
+        public Task<Message[]> GetMessagesAsync() => ctx.Messages.ToArrayAsync();
+        [Route("getmessages")]
+        public async Task<MessageModel[]> GetMessages()
+        {
+            var messages = await GetMessagesAsync();
+            var messagesmodels = messages.Select(m => _mapper.Map<MessageModel>(m)).ToArray();
+            return messagesmodels;
+        }
+        [HttpPost]
+        [Route("addmessage")]
+        public async Task<AddMessageResult> AddMessage(AddMessageModel model)
+        {
+            var mes = _mapper.Map<Message>(model);
+            mes.Date = DateTime.Now;
+            var email = User.Identity.Name;
+            var user = await _userManager.FindByEmailAsync(email);
+            mes.UserId = user.Id;
+            ctx.Messages.Add(mes);
+            await ctx.SaveChangesAsync();
+            return new AddMessageResult() {Success = true};
+
+            
         }
 
     }

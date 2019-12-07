@@ -2,6 +2,8 @@
 @inject HttpClient client
 @using Admin.ViewModels
 @using System.Linq
+@using Admin.ResultModels
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <div class="row">   
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
@@ -49,21 +51,30 @@
                                             Conversation was started
                                         </p>
                                     </li>
-                                    <li class="sent">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">               
-                                        <p>Hello</p>
-                                    </li>
-                                    <li class="replies">
+                                    @if(messages == null)
+                                    {
+                                        <text>Loading...</text>
+                                    }
+                                    else
+                                    {
+                                        @foreach(var mes in messages)
+                                        {   
+                                            string mesclass = mes.User.Email == email ? "sent" : "replies";
+                                            <li class="@mesclass">
                                             <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">               
-                                            <p>Hello</p>
-                                    </li>
+                                            <p>@mes.Text</p>
+                                            </li>
+                                        }
+
+                                    }
+                                    
                                     
                                 </ul>
-                                    <form>
-                                        <input type="text" class="form-control bg-gray border-1" placeholder="Write your message..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <EditForm Model="@addMessageModel" OnValidSubmit="@SendMessage">
+                                        <InputText @bind-Value="addMessageModel.Text" type="text" class="form-control bg-gray border-1" placeholder="Write your message..." aria-label="Search" aria-describedby="basic-addon2"/>
                                         <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-                                        <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                    </form>
+                                        <button class="submit">Send</button>
+                                    </EditForm>
                         </div>
                                 </div>
                                 
@@ -78,9 +89,27 @@
     public string Index {get;set;}
 
     public ChatModel[] chats = null;
-
+    public MessageModel[] messages = null;
+    public AddMessageModel addMessageModel = new AddMessageModel();
+    string email = "";
     protected override async Task OnInitializedAsync()
     {
         chats = await client.GetJsonAsync<ChatModel[]>("api/chats/getchats");
+        messages = await client.GetJsonAsync<MessageModel[]>("api/chats/getmessages");
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        email = user.Identity.Name;
+    }
+
+    protected async Task SendMessage()
+    {
+        var result = await client.PostJsonAsync<AddMessageResult>("api/chats/addmessage", addMessageModel);
+        await RefreshMessages();
+        this.StateHasChanged();
+    }
+
+    private async Task RefreshMessages()
+    {
+        messages = await client.GetJsonAsync<MessageModel[]>("api/chats/getmessages");
     }
 }

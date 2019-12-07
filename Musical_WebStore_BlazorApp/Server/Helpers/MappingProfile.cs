@@ -14,6 +14,8 @@ public class MappingProfile : Profile {
         CreateMap<Metering, MeteringModel>();
         CreateMap<Module, ModuleViewModel>();
         CreateMap<Chat, ChatModel>();
+        CreateMap<Message, MessageModel>();
+        CreateMap<AddMessageModel, Message>();
         
     }
 }
